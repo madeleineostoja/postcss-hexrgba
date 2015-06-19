@@ -16,13 +16,6 @@ var test = function (input, output, opts, done) {
 };
 
 describe('postcss-hexrgba', function () {
-  var input = '',
-    output = '',
-    opts = {};
-
-  afterEach(function(done) {
-    test(input, output, opts, done);
-  });
 
   it('handles standard hex', function (done) {
     test('a{ color: rgba(#fffff,0.8); }',

@@ -1,7 +1,7 @@
 {
   "name": "postcss-hexrgba",
   "version": "0.1.0",
-  "description": "PostCSS plugin that provides hex shortcut to rgba",
+  "description": "PostCSS plugin that adds shorthand hex methods to rgba() values",
   "keywords": [
     "postcss",
     "css",
