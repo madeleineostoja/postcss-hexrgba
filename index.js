@@ -3,33 +3,31 @@
 var postcss = require('postcss');
 
 module.exports = postcss.plugin('postcss-hexrgba', function () {
-  return function (css) {
 
+  // Expand shorthand form (e.g. "#03F") to full form (e.g. "#0033FF")
+  var shorthandRegex = /^#([a-f\d])([a-f\d])([a-f\d])$/i;
+
+  // Extract full hex notation (e.g "#0033FF") into an array (e.g ["00", "33", "FF"])
+  var rgbRegex = /^#([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i;
+
+  return function (css) {
     // build hex -> converter (returns array)
     var hexRgb = function(hex){
+      var result = hex
+        .replace(/^\s+|\s+$/g, '')
+        .replace(shorthandRegex, function(m, r, g, b) {
+          return '#' + r + r + g + g + b + b;
+        })
+        .match(rgbRegex);
 
-      // strip the #
-      var stripped = hex.split('');
-      stripped.shift();
-      hex = stripped.join('');
+      // If the result can’t be parsed, fallback to black as rgb
+      result = result || [null, '00', '00', '00'];
 
-      // if given a shorthand decleration, expand it
-      var shorthandCheck = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
-      hex = hex.replace(shorthandCheck, function(m, r, g, b) {
-          return r + r + g + g + b + b;
-      });
-
-      // convert it
-      var convert = parseInt(hex, 16);
-      var red = convert >> 16 & 255;
-      var green = convert >> 8 & 255;
-      var blue = convert & 255;
-
-      // throw the results into an array
-      hex = [red, green, blue];
-
-      return hex;
-
+      return result ? [
+        parseInt(result[1], 16),
+        parseInt(result[2], 16),
+        parseInt(result[3], 16)
+      ] : [0, 0, 0];
     };
 
     // build our plugin handler
@@ -63,7 +61,7 @@ module.exports = postcss.plugin('postcss-hexrgba', function () {
       hex = hex.toString();
 
       // feed it to our converter
-      var rgb = hexRgb('#ffffff');
+      var rgb = hexRgb(hex);
 
       // add the alpha back in
       rgb.push(a);
