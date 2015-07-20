@@ -18,7 +18,7 @@ var test = function (input, output, opts, done) {
 describe('postcss-hexrgba', function () {
 
   it('handles standard hex', function (done) {
-    test('a{ color: rgba(#fffff,0.8); }',
+    test('a{ color: rgba(#ffffff,0.8); }',
          'a{ color: rgba(255,255,255,0.8); }', { }, done);
   });
 
@@ -30,6 +30,21 @@ describe('postcss-hexrgba', function () {
   it('handles spaces in rgba', function (done) {
     test('a{ color: rgba( #fff , .5 ); }',
          'a{ color: rgba(255,255,255,.5); }', { }, done);
+  });
+
+  it('handles shade hex', function (done) {
+    test('a{ color: rgba(#555555, .5 ); }',
+         'a{ color: rgba(85,85,85,.5); }', { }, done);
+  });
+
+  it('handles color hex', function (done) {
+    test('a{ color: rgba(#28d120, .5 ); }',
+         'a{ color: rgba(40,209,32,.5); }', { }, done);
+  });
+
+  it('handles invalid hex as default value', function (done) {
+    test('a{ color: rgba(#214dd, .5 ); }',
+         'a{ color: rgba(0,0,0,.5); }', { }, done);
   });
 
 });
