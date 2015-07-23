@@ -3,8 +3,6 @@
 var postcss = require('postcss');
 
 module.exports = postcss.plugin('postcss-hexrgba', function () {
-  return function (css) {
-
     /**
      * Hex to RGB converter
      * @param  {string} hex hexidecimal string
@@ -12,27 +10,24 @@ module.exports = postcss.plugin('postcss-hexrgba', function () {
      */
     var hexRgb = function(hex){
 
-      // Strip the #
-      var stripped = hex.split('');
-      stripped.shift();
-      hex = stripped.join('');
-
       // If given shorthand, expand it
       var shorthandCheck = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
       hex = hex.replace(shorthandCheck, function(m, r, g, b) {
-          return r + r + g + g + b + b;
+          return '#' + r + r + g + g + b + b;
       });
 
+      // Extract full hex into an array
+      var rgbRegex = /^#([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i;
+      var rgb = hex
+        .replace(/^\s+|\s+$/g, '')
+        .match(rgbRegex);
+
       // Convert it
-      var convert = parseInt(hex, 16);
-      var red = convert >> 16 & 255;
-      var green = convert >> 8 & 255;
-      var blue = convert & 255;
-
-      // Throw the results into an array
-      hex = [red, green, blue];
-
-      return hex;
+      return rgb ? [
+        parseInt(rgb[1], 16),
+        parseInt(rgb[2], 16),
+        parseInt(rgb[3], 16)
+      ] : false;
 
     };
 
@@ -40,7 +35,7 @@ module.exports = postcss.plugin('postcss-hexrgba', function () {
      * CSS rule handler
      * @param  {string} decl CSS delcaration
      */
-    var ruleHandler = function(decl) {
+    var ruleHandler = function(decl, result) {
 
       var input = decl.value;
       var output = '';
@@ -54,10 +49,8 @@ module.exports = postcss.plugin('postcss-hexrgba', function () {
         return;
       }
 
-      // Store the alpha value for safe keeping
+      // Store the alpha value for safe keeping and strip trailing spaces
       var a = rgba[1];
-
-      // And strip any trailing spaces
       a = a.replace(/\s/g, '');
 
       // Rip out the alpha and turn array into hex string
@@ -65,13 +58,19 @@ module.exports = postcss.plugin('postcss-hexrgba', function () {
       hex = hex.toString();
 
       // Feed it to our converter
-      var rgb = hexRgb(hex);
+      var converted = hexRgb(hex);
 
       // Add the alpha back in
-      rgb.push(a);
+      if (!converted) {
+        result.warn('not a valid hex', { node: decl });
+        return;
+      }
+
+      converted.push(a);
+
 
       // Convert the whole thing to a string again and add back in css wrapper
-      output = rgb.toString();
+      output = converted.toString();
       output = 'rgba(' + output + ')';
 
       // Create the new declaration value
@@ -79,18 +78,19 @@ module.exports = postcss.plugin('postcss-hexrgba', function () {
 
     };
 
-    // Loop through each css rule and declaration, and run our plugin through them
-    css.eachDecl(function(decl) {
+    //  Do it!
+    return function(css, result) {
 
-      // Only process rgba declaration values
-      if (decl.value.indexOf('rgba') === -1) {
-        return;
-      }
+      css.eachDecl(function(decl) {
 
-      // Pass the relevant decls to our rule handler
-      ruleHandler(decl);
+        // Only process rgba declaration values
+        if (decl.value.indexOf('rgba') === -1) {
+          return;
+        }
 
-    });
+        ruleHandler(decl, result);
+
+      });
 
   };
 });
