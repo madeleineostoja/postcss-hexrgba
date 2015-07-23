@@ -36,4 +36,8 @@ describe('postcss-hexrgba', function() {
     test('shorthand', {}, done);
   });
 
+  it('handles hex in multiple attributes', function(done) {
+    test('multiple-attributes', {}, done);
+  });
+
 });

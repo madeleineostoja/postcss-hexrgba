@@ -9,7 +9,6 @@ module.exports = postcss.plugin('postcss-hexrgba', function () {
      * @return {array} RGB values
      */
     var hexRgb = function(hex){
-
       // If given shorthand, expand it
       var shorthandCheck = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
       hex = hex.replace(shorthandCheck, function(m, r, g, b) {
@@ -39,6 +38,8 @@ module.exports = postcss.plugin('postcss-hexrgba', function () {
 
       var input = decl.value;
       var output = '';
+      var prefix = input.match(/(.+) rgba\(.+\)/);
+      var suffix = input.match(/rgba\(.+\) (.+)/);
 
       // Strip out surrounding css property and throw the values in an array
       var rgba = input.split('(')[1].split(')')[0];
@@ -72,6 +73,16 @@ module.exports = postcss.plugin('postcss-hexrgba', function () {
       // Convert the whole thing to a string again and add back in css wrapper
       output = converted.toString();
       output = 'rgba(' + output + ')';
+
+      // Prepend the output with the beginning of the value before the conversion without the rgba part, if it exists
+      if (prefix) {
+        output = prefix[1] + ' ' + output;
+      }
+
+      // PAppend the output with the end of the value before the conversion without the rgba part, if it exists
+      if (suffix) {
+        output = output + ' ' + suffix[1];
+      }
 
       // Create the new declaration value
       decl.value = output;
