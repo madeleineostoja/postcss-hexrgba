@@ -5,21 +5,21 @@
 
 ```css
 .foo {
-  color: rgba(#663399, 0.8)
+  color: rgba(#0fab53, 0.8)
 }
 
 .bar {
-  color: rgba(#fff, .5); 
+  background: linear-gradient(rgba(#fff, .1), rgba(#fff, .2));
 }
 ```
 
 ```css
 .foo {
-  color: rgba(102,51,153,.8)
+  color: rgba(15,171,83, 0.8)
 }
 
 .bar {
-  color: rgba(255,255,255,.5)
+  background: linear-gradient(rgba(255,255,255, .1), rgba(255,255,255, .2));
 }
 ```
 
