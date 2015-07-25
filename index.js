@@ -3,20 +3,22 @@
 var postcss = require('postcss');
 
 module.exports = postcss.plugin('postcss-hexrgba', function () {
+
     /**
      * Hex to RGB converter
-     * @param  {string} hex hexidecimal string
+     * @param  {string} hex hexidecimal string without #
      * @return {array} RGB values
      */
     var hexRgb = function(hex){
+
       // If given shorthand, expand it
-      var shorthandCheck = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+      var shorthandCheck = /^([a-f\d])([a-f\d])([a-f\d])$/i;
       hex = hex.replace(shorthandCheck, function(m, r, g, b) {
-          return '#' + r + r + g + g + b + b;
+          return r + r + g + g + b + b;
       });
 
       // Extract full hex into an array
-      var rgbRegex = /^#([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i;
+      var rgbRegex = /^([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i;
       var rgb = hex
         .replace(/^\s+|\s+$/g, '')
         .match(rgbRegex);
@@ -36,56 +38,39 @@ module.exports = postcss.plugin('postcss-hexrgba', function () {
      */
     var ruleHandler = function(decl, result) {
 
-      var input = decl.value;
-      var output = '';
-      var prefix = input.match(/(.+) rgba\(.+\)/);
-      var suffix = input.match(/rgba\(.+\) (.+)/);
+      var input = decl.value,
+          output = input,
+          hexes = [];
 
-      // Strip out surrounding css property and throw the values in an array
-      var rgba = input.split('(')[1].split(')')[0];
-      rgba = rgba.split(',');
+      // Get the raw hex values out of the decl value and put them in an array
+      input.replace(/rgba\(\#(.*?)\,/g, function(a, b){
+        hexes.push(b);
+      });
 
-      // Only process rgba values with 2 arguments (hex + alpha)
-      if (rgba.length > 2){
+      // If there are no hexes in the value, exit
+      if (!hexes.length) {
         return;
       }
 
-      // Store the alpha value for safe keeping and strip trailing spaces
-      var a = rgba[1];
-      a = a.replace(/\s/g, '');
+      // Convert each hex to RGB
+      hexes.forEach(function(hex) {
+        var rgb = hexRgb(hex);
 
-      // Rip out the alpha and turn array into hex string
-      var hex = rgba.splice(0, 1);
-      hex = hex.toString();
+        // If conversion fails, warn and exit
+        if (!rgb) {
+          result.warn('not a valid hex', { node: decl });
+          return;
+        }
 
-      // Feed it to our converter
-      var converted = hexRgb(hex);
+        rgb = rgb.toString();
 
-      // Add the alpha back in
-      if (!converted) {
-        result.warn('not a valid hex', { node: decl });
-        return;
-      }
+        // Replace hex values in output string
+        var matchHex = new RegExp('#' + hex);
+        output = output.replace(matchHex, rgb);
 
-      converted.push(a);
+      });
 
-
-      // Convert the whole thing to a string again and add back in css wrapper
-      output = converted.toString();
-      output = 'rgba(' + output + ')';
-
-      // Prepend the output with the beginning of the value before the conversion without the rgba part, if it exists
-      if (prefix) {
-        output = prefix[1] + ' ' + output;
-      }
-
-      // PAppend the output with the end of the value before the conversion without the rgba part, if it exists
-      if (suffix) {
-        output = output + ' ' + suffix[1];
-      }
-
-      // Create the new declaration value
-      decl.value = output;
+      decl.replaceWith({prop: decl.prop, value: output });
 
     };
 

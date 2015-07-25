@@ -37,7 +37,12 @@ describe('postcss-hexrgba', function() {
   });
 
   it('handles hex in multiple attributes', function(done) {
-    test('multiple-attributes', {}, done);
+    test('multiple', {}, done);
   });
+
+  it('handles complex statements', function(done) {
+    test('complex', {}, done);
+  });
+
 
 });
