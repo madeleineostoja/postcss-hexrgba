@@ -1,0 +1,4 @@
+.foo {
+  border: 1px solid rgba(#f00, 0.2);
+  border: rgba(#f00,.2) 1px solid;
+}

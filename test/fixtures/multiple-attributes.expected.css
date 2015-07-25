@@ -1,5 +1,0 @@
-.foo {
-  border: 1px solid rgba(255,0,0,0.2);
-  border: rgba(255,0,0,0.2) 1px solid;
-  border: 1px rgba(255,0,0,0.2) solid;
-}
