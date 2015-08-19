@@ -1,7 +1,9 @@
 # PostCSS HexRGBa
 [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][daviddm-image]][daviddm-url]
 
-[PostCSS] plugin that adds shorthand hex methods to rbga() values.
+[PostCSS][PostCSS] plugin that adds shorthand hex methods to rbga() values.
+
+Part of [Rucksack - CSS Superpowers](http://simplaio.github.io/rucksack).
 
 ```css
 .foo {
@@ -31,7 +33,7 @@
 postcss([ require('postcss-hexrgba') ])
 ```
 
-See [PostCSS] docs for examples for your environment.
+See [PostCSS][PostCSS] docs for examples for your environment.
 
 --
 
@@ -46,4 +48,3 @@ MIT © [Sean King](https://twitter.com/seaneking)
 [daviddm-image]: https://david-dm.org/seaneking/postcss-hexrgba.svg?theme=shields.io
 [daviddm-url]: https://david-dm.org/seaneking/postcss-hexrgba
 [PostCSS]: https://github.com/postcss/postcss
-
