@@ -80,7 +80,7 @@ module.exports = postcss.plugin('postcss-hexrgba', function () {
       css.walkDecls(function(decl) {
 
         // Only process rgba declaration values
-        if (decl.value.indexOf('rgba') === -1) {
+        if (typeof decl.value === 'undefined' || decl.value.indexOf('rgba') === -1) {
           return;
         }
 
