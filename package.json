@@ -27,7 +27,7 @@
   },
   "homepage": "https://github.com/seaneking/postcss-hexrgba",
   "dependencies": {
-    "postcss": "^5.0.0"
+    "postcss": "^6.0.7"
   },
   "devDependencies": {
     "gulp-eslint": "^0.12.0",
