@@ -1,5 +1,4 @@
 /*eslint no-unused-expressions: 0*/
-'use strict';
 
 var postcss = require('postcss'),
     expect = require('chai').expect,
