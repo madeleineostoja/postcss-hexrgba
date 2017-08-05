@@ -1,90 +1,75 @@
-var postcss = require('postcss');
+const postcss = require('postcss');
 
-module.exports = postcss.plugin('postcss-hexrgba', function () {
+module.exports = postcss.plugin('postcss-hexrgba', () => {
 
-    /**
-     * Hex to RGB converter
-     * @param  {string} hex hexidecimal string without #
-     * @return {array} RGB values
-     */
-    var hexRgb = function(hex){
+  /**
+   * Hex to RGB converter
+   * @param  {string} hex hexidecimal string without #
+   * @return {array} RGB values
+   */
+  function hexRgb(hex){
+    let shorthandCheck = /^([a-f\d])([a-f\d])([a-f\d])$/i,
+        rgbRegex = /^([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i,
+        rgb;
 
-      // If given shorthand, expand it
-      var shorthandCheck = /^([a-f\d])([a-f\d])([a-f\d])$/i;
-      hex = hex.replace(shorthandCheck, function(m, r, g, b) {
-          return r + r + g + g + b + b;
-      });
+    hex = hex.replace(shorthandCheck, function(m, r, g, b) {
+      return r + r + g + g + b + b;
+    });
 
-      // Extract full hex into an array
-      var rgbRegex = /^([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i;
-      var rgb = hex
-        .replace(/^\s+|\s+$/g, '')
-        .match(rgbRegex);
+    rgb = hex.replace(/^\s+|\s+$/g, '').match(rgbRegex);
 
-      // Convert it
-      return rgb ? [
-        parseInt(rgb[1], 16),
-        parseInt(rgb[2], 16),
-        parseInt(rgb[3], 16)
-      ] : false;
+    // Convert it
+    return rgb ? [
+      parseInt(rgb[1], 16),
+      parseInt(rgb[2], 16),
+      parseInt(rgb[3], 16)
+    ] : false;
+  }
 
-    };
+  /**
+   * CSS rule handler
+   * @param  {string} decl CSS delcaration
+   */
+  function ruleHandler(decl, result) {
+    let input = decl.value,
+        output = input,
+        hexes = [];
 
-    /**
-     * CSS rule handler
-     * @param  {string} decl CSS delcaration
-     */
-    var ruleHandler = function(decl, result) {
+    // Get the raw hex values out of the decl value and put them in an array
+    input.replace(/rgba\(#(.*?),/g, (a, b) => hexes.push(b));
 
-      var input = decl.value,
-          output = input,
-          hexes = [];
+    // If there are no hexes in the value, exit
+    if (!hexes.length) {
+      return;
+    }
 
-      // Get the raw hex values out of the decl value and put them in an array
-      input.replace(/rgba\(\#(.*?)\,/g, function(a, b){
-        hexes.push(b);
-      });
+    // Convert each hex to RGB
+    hexes.forEach(hex => {
+      let rgb = hexRgb(hex),
+          matchHex = new RegExp('#' + hex);
 
-      // If there are no hexes in the value, exit
-      if (!hexes.length) {
+      // If conversion fails, warn and exit
+      if (!rgb) {
+        result.warn('not a valid hex', { node: decl });
         return;
       }
 
-      // Convert each hex to RGB
-      hexes.forEach(function(hex) {
-        var rgb = hexRgb(hex);
+      rgb = rgb.toString();
 
-        // If conversion fails, warn and exit
-        if (!rgb) {
-          result.warn('not a valid hex', { node: decl });
-          return;
-        }
+      // Replace hex values in output string
+      output = output.replace(matchHex, rgb);
+    });
 
-        rgb = rgb.toString();
+    decl.replaceWith({ prop: decl.prop, value: output });
+  }
 
-        // Replace hex values in output string
-        var matchHex = new RegExp('#' + hex);
-        output = output.replace(matchHex, rgb);
+  return function(css, result) {
+    css.walkDecls(decl => {
+      if (typeof decl.value === 'undefined' || decl.value.indexOf('rgba') === -1) {
+        return;
+      }
 
-      });
-
-      decl.replaceWith({prop: decl.prop, value: output });
-
-    };
-
-    //  Do it!
-    return function(css, result) {
-
-      css.walkDecls(function(decl) {
-
-        // Only process rgba declaration values
-        if (typeof decl.value === 'undefined' || decl.value.indexOf('rgba') === -1) {
-          return;
-        }
-
-        ruleHandler(decl, result);
-
-      });
-
+      ruleHandler(decl, result);
+    });
   };
 });

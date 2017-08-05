@@ -1,13 +1,11 @@
-/*eslint no-unused-expressions: 0*/
+const postcss = require('postcss');
+const expect = require('chai').expect;
+const fs = require('fs');
+const path = require('path');
+const plugin = require('../');
 
-var postcss = require('postcss'),
-    expect = require('chai').expect,
-    fs = require('fs'),
-    path = require('path'),
-    plugin = require('../');
-
-var test = function(fixture, opts, done) {
-  var input = fixture + '.css',
+function test(fixture, opts, done) {
+  let input = fixture + '.css',
       expected = fixture + '.expected.css';
 
   input = fs.readFileSync(path.join(__dirname, 'fixtures', input), 'utf8');
@@ -15,33 +13,21 @@ var test = function(fixture, opts, done) {
 
   postcss([ plugin(opts) ])
     .process(input)
-    .then(function (result) {
+    .then(result => {
       expect(result.css).to.eql(expected);
       expect(result.warnings()).to.be.empty;
-    done();
-  }).catch(function (error) {
-    done(error);
-  });
+      done();
+    }).catch(error => done(error));
+}
 
-};
+describe('postcss-hexrgba', () => {
 
-describe('postcss-hexrgba', function() {
+  it('handles standard hex', done => test('standard', {}, done));
 
-  it('handles standard hex', function(done) {
-    test('standard', {}, done);
-  });
+  it('handles shorthand hex', done => test('shorthand', {}, done));
 
-  it('handles shorthand hex', function(done) {
-    test('shorthand', {}, done);
-  });
+  it('handles hex in multiple attributes', done => test('multiple', {}, done));
 
-  it('handles hex in multiple attributes', function(done) {
-    test('multiple', {}, done);
-  });
-
-  it('handles complex statements', function(done) {
-    test('complex', {}, done);
-  });
-
+  it('handles complex statements', done => test('complex', {}, done));
 
 });
