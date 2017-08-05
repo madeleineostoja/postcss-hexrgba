@@ -1,3 +1,5 @@
+'use strict';
+
 const postcss = require('postcss');
 const expect = require('chai').expect;
 const fs = require('fs');
