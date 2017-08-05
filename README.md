@@ -43,7 +43,7 @@ MIT © [Sean King](https://twitter.com/seaneking)
 
 [npm-badge]: https://badge.fury.io/js/postcss-hexrgba.svg
 [npm-url]: https://npmjs.org/package/postcss-hexrgba
-[downloads-badge]: https://img.shields.io/npm/dm/postcss-clearfix.svg
+[downloads-badge]: https://img.shields.io/npm/dm/postcss-hexrgba.svg
 [travis-badge]: https://travis-ci.org/seaneking/postcss-hexrgba.svg?branch=master
 [travis-url]: https://travis-ci.org/seaneking/postcss-hexrgba
 [PostCSS]: https://github.com/postcss/postcss
