@@ -30,12 +30,12 @@
     "postcss": "^6.0.7"
   },
   "devDependencies": {
-    "gulp-eslint": "^4.0.0",
-    "gulp-mocha": "^4.3.1",
-    "chai": "^4.1.0",
-    "gulp": "^3.9.1"
+    "chai": "^4.0.2",
+    "eslint": "^4.1.1",
+    "mocha": "^3.4.2"
   },
   "scripts": {
-    "test": "gulp check"
+    "test": "mocha test",
+    "posttest": "eslint ."
   }
 }
