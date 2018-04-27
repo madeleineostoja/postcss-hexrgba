@@ -32,4 +32,6 @@ describe('postcss-hexrgba', () => {
 
   it('handles complex statements', done => test('complex', {}, done));
 
+  it('preservers !important', done => test('important', {}, done));
+
 });
