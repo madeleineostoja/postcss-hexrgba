@@ -1,5 +1,19 @@
 # Change Log
 
+## [v1.0.1](https://github.com/seaneking/postcss-hexrgba/tree/v1.0.1) (2018-04-30)
+[Full Changelog](https://github.com/seaneking/postcss-hexrgba/compare/v1.0.0...v1.0.1)
+
+**Closed issues:**
+
+- !important gets removed [\#9](https://github.com/seaneking/postcss-hexrgba/issues/9)
+- Plugin not working with specific linear-gradient background [\#6](https://github.com/seaneking/postcss-hexrgba/issues/6)
+
+**Merged pull requests:**
+
+-  directly substitute the hex in the replace callback [\#12](https://github.com/seaneking/postcss-hexrgba/pull/12) ([schelmo](https://github.com/schelmo))
+- add a test for !important \( \#10 \) [\#11](https://github.com/seaneking/postcss-hexrgba/pull/11) ([schelmo](https://github.com/schelmo))
+- do not omit !important [\#10](https://github.com/seaneking/postcss-hexrgba/pull/10) ([schelmo](https://github.com/schelmo))
+
 ## [v1.0.0](https://github.com/seaneking/postcss-hexrgba/tree/v1.0.0) (2017-07-26)
 [Full Changelog](https://github.com/seaneking/postcss-hexrgba/compare/v0.2.1...v1.0.0)
 
