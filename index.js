@@ -33,33 +33,22 @@ module.exports = postcss.plugin('postcss-hexrgba', () => {
    * @param  {string} decl CSS delcaration
    */
   function ruleHandler(decl, result) {
-    let input = decl.value,
-        output = input,
-        hexes = [];
+    let input = decl.value;
 
-    // Get the raw hex values out of the decl value and put them in an array
-    input.replace(/rgba\(#(.*?),/g, (a, b) => hexes.push(b));
-
-    // If there are no hexes in the value, exit
-    if (!hexes.length) {
-      return;
-    }
-
-    // Convert each hex to RGB
-    hexes.forEach(hex => {
+    // Get the raw hex values and replace them
+    let output = input.replace(/rgba\(#(.*?),/g, (match, hex) => {
       let rgb = hexRgb(hex),
           matchHex = new RegExp('#' + hex);
-
-      // If conversion fails, warn and exit
+        
+      // If conversion fails, emit a warning
       if (!rgb) {
         result.warn('not a valid hex', { node: decl });
-        return;
+        return match;
       }
 
       rgb = rgb.toString();
-
-      // Replace hex values in output string
-      output = output.replace(matchHex, rgb);
+      
+      return match.replace(matchHex, rgb);
     });
 
     decl.replaceWith({
