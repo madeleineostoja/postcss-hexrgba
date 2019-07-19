@@ -51,11 +51,7 @@ module.exports = postcss.plugin('postcss-hexrgba', () => {
       return match.replace(matchHex, rgb);
     });
 
-    decl.replaceWith({
-      prop: decl.prop,
-      value: output,
-      important: decl.important
-    });
+    decl.value = output;
   }
 
   return function(css, result) {
