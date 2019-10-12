@@ -35,23 +35,24 @@ module.exports = postcss.plugin('postcss-hexrgba', () => {
   function ruleHandler(decl, result) {
     let input = decl.value;
 
-    // Get the raw hex values and replace them
-    let output = input.replace(/rgba\(#(.*?),/g, (match, hex) => {
-      let rgb = hexRgb(hex),
-          matchHex = new RegExp('#' + hex);
+    if (input.includes('rgba(#')) {
+      // Get the raw hex values and replace them
+      let output = input.replace(/rgba\(#(.*?),/g, (match, hex) => {
+        let rgb = hexRgb(hex),
+            matchHex = new RegExp('#' + hex);
+          
+        // If conversion fails, emit a warning
+        if (!rgb) {
+          result.warn('not a valid hex', { node: decl });
+          return match;
+        }
+
+        rgb = rgb.toString();
         
-      // If conversion fails, emit a warning
-      if (!rgb) {
-        result.warn('not a valid hex', { node: decl });
-        return match;
-      }
-
-      rgb = rgb.toString();
-      
-      return match.replace(matchHex, rgb);
-    });
-
-    decl.value = output;
+        return match.replace(matchHex, rgb);
+      });
+      decl.value = output;
+    }
   }
 
   return function(css, result) {
