@@ -35,9 +35,9 @@ module.exports = postcss.plugin('postcss-hexrgba', () => {
   function ruleHandler(decl, result) {
     let input = decl.value;
 
-    if (input.includes('rgba(#')) {
+    if (input.includes('rgba(#') || input.includes('rgba( #')) {
       // Get the raw hex values and replace them
-      let output = input.replace(/rgba\(#(.*?),/g, (match, hex) => {
+      let output = input.replace(/rgba\( ?#(.*?),/g, (match, hex) => {
         let rgb = hexRgb(hex),
             matchHex = new RegExp('#' + hex);
           
