@@ -14,7 +14,7 @@ function test(fixture, opts, done) {
   expected = fs.readFileSync(path.join(__dirname, 'fixtures', expected), 'utf8');
 
   postcss([ plugin(opts) ])
-    .process(input)
+    .process(input, {from: undefined})
     .then(result => {
       expect(result.css).to.eql(expected);
       expect(result.warnings()).to.be.empty;
