@@ -1,5 +1,5 @@
   .foo {
-    background: linear-gradient(rgba(15,171,83,.1), rgba(0,0,0, 0.2));
+    background: linear-gradient(rgba(15,171,83,.1), rgba(0, 0, 0, 0.2), rgba(0,0,0, 0.2));
     background-image: linear-gradient(#f00, rgba(255,0,0, 0.2)),
       linear-gradient(#0f0, rgba(0,255,0, 0.2));
   }
