@@ -3,7 +3,7 @@
 
 [PostCSS][PostCSS] plugin that adds shorthand hex methods to rgba() values.
 
-_Part of [Rucksack - CSS Superpowers](http://simplaio.github.io/rucksack)_
+_Part of [Rucksack - CSS Superpowers](https://www.rucksackcss.org/)_
 
 **Input**
 
