@@ -1,6 +1,5 @@
 'use strict';
 
-const postcss = require('postcss');
 const valueParser = require('postcss-value-parser');
 
 const rgbShorthandRegex = /^([a-f\d])([a-f\d])([a-f\d])$/i;
@@ -58,14 +57,18 @@ function ruleHandler(decl, result) {
   decl.value = value;
 }
 
-module.exports = postcss.plugin('postcss-hexrgba', () => {
-  return (css, result) => {
-    css.walkDecls(decl => {
-      if (decl.value.indexOf('rgba') === -1) {
+module.exports = () => {
+  return {
+    postcssPlugin: 'postcss-hexrgba',
+
+    Declaration(decl, { result }) {
+      if (!decl.value.includes('rgba')) {
         return;
       }
 
       ruleHandler(decl, result);
-    });
+    },
   };
-});
+};
+
+module.exports.postcss = true;
