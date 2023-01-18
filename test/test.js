@@ -34,4 +34,5 @@ describe('postcss-hexrgba', () => {
 
   it('preservers !important', done => test('important', {}, done));
 
+  it('modern color function notation', done => test('modern-notation', { notation: 'modern' }, done));
 });

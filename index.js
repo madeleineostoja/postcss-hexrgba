@@ -26,10 +26,16 @@ function hexRgb(hex){
 }
 
 /**
+ * @typedef {{ colorFunctionNotation: 'legacy' | 'modern' }} Options
+ */
+
+/**
  * CSS rule handler
  * @param  {string} decl CSS declaration
+ * @param  {any} result PostCSS result
+ * @param  {Options} options
  */
-function ruleHandler(decl, result) {
+function ruleHandler(decl, result, options) {
   const value = valueParser(decl.value).walk(node => {
     if (node.type !== 'function' || node.value !== 'rgba') {
       return;
@@ -51,13 +57,18 @@ function ruleHandler(decl, result) {
     }
 
     // Replace hex value with rgb
-    nodes[0].value = rgb;
+    nodes[0].value = options.colorFunctionNotation === 'modern' ? rgb.join(' ') : rgb.join(',');
   }).toString();
 
   decl.value = value;
 }
 
-module.exports = () => {
+/**
+ * @param {Options} [options]
+ */
+module.exports = (options = {}) => {
+  const colorFunctionNotation = options.colorFunctionNotation || 'legacy';
+
   return {
     postcssPlugin: 'postcss-hexrgba',
 
@@ -66,7 +77,7 @@ module.exports = () => {
         return;
       }
 
-      ruleHandler(decl, result);
+      ruleHandler(decl, result, { colorFunctionNotation });
     },
   };
 };
