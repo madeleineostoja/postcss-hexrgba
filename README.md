@@ -9,7 +9,7 @@ _Part of [Rucksack - CSS Superpowers](https://www.rucksackcss.org/)_
 
 ```css
 .foo {
-  color: rgba(#0fab53, 0.8)
+  color: rgba(#0fab53, 0.8);
 }
 
 .bar {
@@ -21,7 +21,7 @@ _Part of [Rucksack - CSS Superpowers](https://www.rucksackcss.org/)_
 
 ```css
 .foo {
-  color: rgba(15,171,83, 0.8)
+  color: rgba(15,171,83, 0.8);
 }
 
 .bar {
@@ -33,6 +33,33 @@ _Part of [Rucksack - CSS Superpowers](https://www.rucksackcss.org/)_
 
 ```js
 postcss([ require('postcss-hexrgba') ])
+```
+
+### Options
+
+#### `colorFunctionNotation`
+
+Specify the color function notation to use. There are two options: `'modern'` and `'legacy'`.
+The default is `'legacy'`.
+
+```js
+postcss([ require('postcss-hexrgba')({ colorFunctionNotation: 'modern' }) ])
+```
+
+[Modern](https://www.w3.org/TR/css-color-4/#rgb-functions) notation:
+
+```css
+.foo {
+  color: rgba(15 171 83 / 80%);
+}
+```
+
+[Legacy](https://www.w3.org/TR/css-color-4/#legacy-color-syntax) notation:
+
+```css
+.foo {
+  color: rgba(15,171,83, 0.8);
+}
 ```
 
 See [PostCSS][PostCSS] docs for examples for your environment.
