@@ -9,7 +9,7 @@ _Part of [Rucksack - CSS Superpowers](https://www.rucksackcss.org/)_
 
 ```css
 .foo {
-  color: rgba(#0fab53, 0.8)
+  color: rgba(#0fab53, 0.8);
 }
 
 .bar {
@@ -21,7 +21,7 @@ _Part of [Rucksack - CSS Superpowers](https://www.rucksackcss.org/)_
 
 ```css
 .foo {
-  color: rgba(15,171,83, 0.8)
+  color: rgba(15,171,83, 0.8);
 }
 
 .bar {
